@@ -54,14 +54,12 @@ func main() {
 	// 拿到租约的ID
 	leaseId = leaseGrantResp.ID
 
-	// 准备一个用于取消自动续租的context
 	ctx, cancelFunc = context.WithCancel(context.TODO())
 
 	// 确保函数退出后, 自动续租会停止
 	defer cancelFunc()
 	defer lease.Revoke(context.TODO(), leaseId)
 
-	// 5秒后会取消自动续租
 	if keepRespChan, err = lease.KeepAlive(ctx, leaseId); err != nil {
 		fmt.Println(err)
 		return
